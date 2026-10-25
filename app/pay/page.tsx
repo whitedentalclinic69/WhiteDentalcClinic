@@ -103,8 +103,10 @@ function PaymentPage() {
               {booking.paymentStatus === "paid" ? (
                 <div className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 p-4">
                   <p className="font-bold text-emerald-900">Payment confirmed. Your booking is confirmed and your ticket is ready.</p>
-                  <a href={`/api/bookings/${encodeURIComponent(booking.ticketNumber)}/ticket`} className="mt-3 inline-flex min-h-11 items-center rounded-full bg-emerald-800 px-5 text-sm font-bold text-white hover:bg-emerald-900">Download booking ticket</a>
-                  <a href={`/api/bookings/${encodeURIComponent(booking.ticketNumber)}/receipt`} className="ml-3 mt-3 inline-flex min-h-11 items-center rounded-full border border-emerald-800 px-5 text-sm font-bold text-emerald-900 hover:bg-emerald-100">Download receipt</a>
+                  <div className="mt-3 flex flex-wrap gap-3">
+                    <a href={`/api/bookings/${encodeURIComponent(booking.ticketNumber)}/ticket`} className="inline-flex min-h-11 items-center justify-center rounded-full bg-emerald-800 px-5 text-center text-sm font-bold text-white hover:bg-emerald-900">Download booking ticket</a>
+                    <a href={`/api/bookings/${encodeURIComponent(booking.ticketNumber)}/receipt`} className="inline-flex min-h-11 items-center justify-center rounded-full border border-emerald-800 px-5 text-center text-sm font-bold text-emerald-900 hover:bg-emerald-100">Download receipt</a>
+                  </div>
                 </div>
               ) : (
                 <>

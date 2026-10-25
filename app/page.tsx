@@ -140,9 +140,9 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-[#101010] text-white">
       <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-[#101010]/95 backdrop-blur-xl">
-        <nav className="relative mx-auto flex max-w-7xl items-center justify-between gap-2 px-4 py-3 sm:px-5 lg:px-8">
-          <a href="#" aria-label="White Dental Clinic home" className="flex items-center gap-2 text-sm font-black tracking-[0.08em] sm:text-lg">
-            <span className="flex h-8 w-8 items-center justify-center rounded-full border border-[#58b4a7]/60 text-[#58b4a7]"><ToothMark className="h-5 w-5" /></span>
+        <nav className="relative mx-auto flex max-w-7xl items-center justify-between gap-2 px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-5 lg:px-8">
+          <a href="#" aria-label="White Dental Clinic home" className="flex min-w-0 items-center gap-1.5 whitespace-nowrap text-[11px] font-black tracking-[0.04em] sm:gap-2 sm:text-lg sm:tracking-[0.08em]">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#58b4a7]/60 text-[#58b4a7]"><ToothMark className="h-5 w-5" /></span>
             WHITE <span className="text-[#58b4a7]">DENTAL CLINIC</span>
           </a>
 
@@ -150,7 +150,7 @@ export default function Home() {
             {navLinks.map(([label, href]) => <a key={href} href={href} className="transition hover:text-[#58b4a7]">{label}</a>)}
           </div>
 
-          <a href="/book" className="rounded-full bg-[#58b4a7] px-3 py-2 text-[10px] font-bold text-black transition hover:bg-white sm:px-4 sm:text-xs lg:px-5 lg:text-sm">
+          <a href="/book" className="shrink-0 rounded-full bg-[#58b4a7] px-3 py-2 text-[10px] font-bold text-black transition hover:bg-white sm:px-4 sm:text-xs lg:px-5 lg:text-sm">
             <span className="sm:hidden">BOOK</span>
             <span className="hidden sm:inline">REQUEST A VISIT</span>
           </a>

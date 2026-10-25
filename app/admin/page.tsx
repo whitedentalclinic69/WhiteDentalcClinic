@@ -669,10 +669,10 @@ export default function AdminDashboardPage() {
                       <div className="flex flex-col justify-between gap-3 sm:flex-row">
                         <div>
                           <h3 className="font-bold">{booking.customer_name}</h3>
-                          <p className="text-sm text-gray-400">{booking.customer_email} · {booking.customer_phone}</p>
+                          <p className="break-words text-sm text-gray-400">{booking.customer_email} · {booking.customer_phone}</p>
                         </div>
                         <div className="sm:text-right">
-                          <p className="text-sm font-semibold text-[#58b4a7]">{booking.ticket_number}</p>
+                          <p className="break-all text-sm font-semibold text-[#58b4a7]">{booking.ticket_number}</p>
                           <p className="text-xs capitalize text-gray-400">{booking.booking_status}</p>
                         </div>
                       </div>

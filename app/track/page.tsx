@@ -74,7 +74,7 @@ function BookingTracker() {
           {booking && (
             <article className="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-5 sm:p-7">
               <div className="flex flex-wrap items-start justify-between gap-3">
-                <div><p className="text-xs font-bold uppercase tracking-widest text-teal-700">Booking number</p><h2 className="mt-1 text-xl font-black text-[#12343a]">{booking.ticketNumber}</h2></div>
+                <div className="min-w-0"><p className="text-xs font-bold uppercase tracking-widest text-teal-700">Booking number</p><h2 className="mt-1 break-all text-lg font-black text-[#12343a] sm:text-xl">{booking.ticketNumber}</h2></div>
                 <span className={`rounded-full px-3 py-1.5 text-xs font-bold capitalize ${booking.paymentStatus === "paid" ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-900"}`}>{booking.paymentStatus === "paid" ? "Fee paid" : "Fee due"}</span>
               </div>
               <p className="mt-5 font-bold text-slate-900">{booking.name}</p>
