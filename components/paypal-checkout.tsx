@@ -32,7 +32,38 @@ export function PayPalCheckout({
   onPaid: (message: string) => void;
 }) {
   const [error, setError] = useState("");
-  const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
+  const [clientId, setClientId] = useState("");
+  const [isLoadingConfig, setIsLoadingConfig] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadPayPalConfig() {
+      try {
+        const response = await fetch("/api/paypal/config", { cache: "no-store" });
+        const result: unknown = await response.json();
+        if (!response.ok) {
+          const message = result && typeof result === "object" && "error" in result && typeof result.error === "string"
+            ? result.error
+            : "PayPal checkout configuration is unavailable.";
+          throw new Error(message);
+        }
+        if (!result || typeof result !== "object" || !("clientId" in result) || typeof result.clientId !== "string" || !result.clientId) {
+          throw new Error("PayPal checkout returned an invalid client ID.");
+        }
+        if (!cancelled) setClientId(result.clientId);
+      } catch (cause) {
+        if (!cancelled) {
+          setError(cause instanceof Error ? cause.message : "Unable to load PayPal checkout configuration.");
+        }
+      } finally {
+        if (!cancelled) setIsLoadingConfig(false);
+      }
+    }
+
+    void loadPayPalConfig();
+    return () => { cancelled = true; };
+  }, []);
 
   useEffect(() => {
     if (!clientId || !ticketNumber) return;
@@ -100,17 +131,12 @@ export function PayPalCheckout({
     return () => { cancelled = true; };
   }, [clientId, onPaid, ticketNumber]);
 
-  if (!clientId) {
-    return <p role="status" className="mt-4 rounded-xl bg-amber-50 p-4 text-sm leading-6 text-amber-900">
-      Secure checkout is not configured yet. The clinic needs to set its PayPal client ID and secret before payments can be accepted.
-    </p>;
-  }
-
   return (
     <div className="mt-6 space-y-3">
+      {isLoadingConfig && <p role="status" className="rounded-xl bg-sky-50 p-4 text-sm leading-6 text-sky-900">Loading secure payment options…</p>}
       <div id="paypal-wallet-button" />
       <div id="paypal-card-button" />
-      {error && <p role="alert" className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-800">{error}</p>}
+      {error && <p role="alert" className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm leading-6 text-red-800">{error}</p>}
       <p className="text-xs leading-5 text-slate-500">PayPal or eligible debit and credit cards are processed securely by PayPal.</p>
     </div>
   );
