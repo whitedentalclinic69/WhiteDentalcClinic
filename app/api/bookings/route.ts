@@ -1,10 +1,17 @@
 import { NextResponse } from "next/server";
-import { randomUUID } from "node:crypto";
+import { randomInt } from "node:crypto";
 import { sendBookingConfirmationEmail } from "../../../lib/email";
 import { getGalleryItems } from "../../../lib/gallery";
 import { supabase } from "../../../lib/supabase";
 
 const appointmentTimes = ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00"];
+const bookingCodeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+function createBookingCode() {
+  return Array.from({ length: 10 }, () =>
+    bookingCodeAlphabet.charAt(randomInt(bookingCodeAlphabet.length)),
+  ).join("");
+}
 
 export async function GET(request: Request) {
   const searchParams = new URL(request.url).searchParams;
@@ -144,7 +151,7 @@ export async function POST(request: Request) {
 
     const depositAmount = Math.round(servicePrice * 30) / 100;
     const balanceAmount = servicePrice - depositAmount;
-    const generatedTicketNumber = `WDC-${date.replace(/-/g, "")}-${randomUUID().replace(/-/g, "").toUpperCase()}`;
+    const generatedTicketNumber = createBookingCode();
 
     const { data, error } = await supabase
       .from("bookings")

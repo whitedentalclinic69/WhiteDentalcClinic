@@ -64,7 +64,7 @@ function BookingTracker() {
 
           <form onSubmit={lookup} className="mt-6 grid gap-3 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
             <label className="block text-sm font-semibold text-slate-700" htmlFor="ticket-number">Booking number
-              <input id="ticket-number" required maxLength={64} value={input} onChange={(event) => setInput(event.target.value)} placeholder="WDC-…" className="mt-2 min-h-12 w-full rounded-xl border border-slate-200 px-4 outline-none focus:border-teal-700" />
+              <input id="ticket-number" required maxLength={64} value={input} onChange={(event) => setInput(event.target.value.toUpperCase())} placeholder="10-character booking code" className="mt-2 min-h-12 w-full rounded-xl border border-slate-200 px-4 outline-none focus:border-teal-700" />
             </label>
             <label className="block text-sm font-semibold text-slate-700" htmlFor="booking-email">Email address
               <input id="booking-email" required type="email" maxLength={254} autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" className="mt-2 min-h-12 w-full rounded-xl border border-slate-200 px-4 outline-none focus:border-teal-700" />
