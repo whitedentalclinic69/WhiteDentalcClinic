@@ -218,7 +218,7 @@ export default function Home() {
             <div>
               <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#58b4a7] sm:text-xs">Care for every smile</p>
               <h2 className="mt-3 text-3xl font-black uppercase sm:text-5xl">Feel good about <span className="text-[#58b4a7]">your care.</span></h2>
-              <p className="mt-4 max-w-xl text-sm leading-6 text-gray-400 sm:text-base">Explore services from our team, review transparent pricing, and choose the care that feels right for you.</p>
+              <p className="mt-4 max-w-xl text-sm leading-6 text-gray-400 sm:text-base">Explore services from our team, review transparent pricing, and choose the care that feels right for you. The 30% booking fee reserves your appointment time, helps us prepare for your visit, and is credited toward your service total.</p>
             </div>
             <a href="/book" className="text-sm font-semibold text-[#58b4a7] transition hover:text-white">Ask us about a treatment ↗</a>
           </div>
@@ -270,7 +270,7 @@ export default function Home() {
         <div className="mx-auto max-w-5xl rounded-3xl border border-[#58b4a7]/30 bg-gradient-to-br from-[#252019] to-[#141414] px-5 py-10 text-center sm:px-12 sm:py-14">
           <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#58b4a7] sm:text-xs">Your next visit starts here</p>
           <h2 className="mt-5 text-3xl font-black uppercase sm:text-6xl">Ready for a <span className="text-[#58b4a7]">fresh start?</span></h2>
-          <p className="mx-auto mt-5 max-w-2xl text-sm leading-6 text-gray-400 sm:text-base sm:leading-7">Choose a clinic service, then securely pay the 30% booking fee to reserve your appointment. Your remaining balance is due at your visit.</p>
+          <p className="mx-auto mt-5 max-w-2xl text-sm leading-6 text-gray-400 sm:text-base sm:leading-7">Choose a clinic service, then securely pay the 30% booking fee. It reserves your appointment time, helps our team prepare for your visit, and is credited toward your service total. Your remaining balance is due at your visit.</p>
           <a href="/book" className="mt-8 inline-flex w-full justify-center rounded-full bg-[#58b4a7] px-6 py-3 text-sm font-bold uppercase tracking-wider text-black transition hover:bg-white sm:w-auto sm:px-8 sm:py-4">Explore services & book ↗</a>
           <p className="mt-4 text-xs text-gray-500">Your booking and payment details will be emailed to you.</p>
         </div>

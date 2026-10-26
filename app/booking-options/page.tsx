@@ -26,8 +26,12 @@ function BookingOptions() {
             </p>
           </div>
 
-          <div className="p-6 sm:p-10">
-            <label htmlFor="booking-code" className="block text-sm font-bold text-[#12343a]">Booking code
+          <div className="p-5 sm:p-10">
+            <div className="mb-6 rounded-2xl border border-teal-200 bg-teal-50 p-4 text-sm leading-6 text-teal-950 sm:p-5">
+              <p className="font-bold">Why is there a booking fee?</p>
+              <p className="mt-1">It reserves your appointment time and helps our team prepare for your visit. The fee is credited toward your service total, with the remaining balance due at the clinic.</p>
+            </div>
+            <label htmlFor="booking-code" className="block text-sm font-bold text-[#12343a]">Booking code <span className="ml-2 inline-flex rounded-full bg-teal-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-teal-800">Required</span>
               <input
                 id="booking-code"
                 autoComplete="off"
@@ -35,7 +39,7 @@ function BookingOptions() {
                 value={bookingCode}
                 onChange={(event) => setBookingCode(event.target.value.toUpperCase())}
                 placeholder="e.g. A1B2C3D4E5"
-                className="mt-2 min-h-14 w-full rounded-2xl border border-teal-100 bg-teal-50/60 px-4 font-mono text-lg font-bold tracking-[0.12em] text-[#12343a] outline-none transition placeholder:font-sans placeholder:text-sm placeholder:font-normal placeholder:tracking-normal focus:border-teal-600 focus:ring-2 focus:ring-teal-700/15"
+                className="mt-2 min-h-14 min-w-0 w-full rounded-2xl border border-teal-100 bg-teal-50/60 px-3 font-mono text-base font-bold tracking-[0.08em] text-[#12343a] outline-none transition placeholder:font-sans placeholder:text-sm placeholder:font-normal placeholder:tracking-normal focus:border-teal-600 focus:ring-2 focus:ring-teal-700/15 sm:px-4 sm:text-lg sm:tracking-[0.12em]"
               />
             </label>
             <p className="mt-2 text-xs leading-5 text-slate-500">New booking codes contain 10 letters and numbers. Older bookings can use their original code.</p>

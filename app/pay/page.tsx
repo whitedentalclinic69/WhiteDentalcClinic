@@ -7,6 +7,7 @@ import { PayPalCheckout } from "../../components/paypal-checkout";
 
 type Booking = {
   ticketNumber: string;
+  name: string;
   serviceName: string;
   serviceDescription: string;
   servicePrice: number;
@@ -22,6 +23,7 @@ function isBooking(value: unknown): value is Booking {
   if (!value || typeof value !== "object") return false;
   const booking = value as Partial<Booking>;
   return typeof booking.ticketNumber === "string"
+    && typeof booking.name === "string"
     && typeof booking.serviceName === "string"
     && typeof booking.serviceDescription === "string"
     && typeof booking.servicePrice === "number"
@@ -90,7 +92,7 @@ function PaymentPage() {
             <p className="text-xs font-bold uppercase tracking-[0.24em] text-teal-100">Your visit, your way</p>
             <h1 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">Your appointment &amp; payment</h1>
             <p className="mt-3 max-w-xl text-sm leading-6 text-teal-50 sm:text-base">
-              Review your chosen dental service and pay its 30% booking fee securely. The remaining balance is due at your visit.
+              The 30% booking fee reserves your chosen appointment time and helps our team prepare for your visit. It is applied toward your service total; the remaining balance is due at your visit.
             </p>
           </div>
 
@@ -133,6 +135,7 @@ function PaymentPage() {
                 <div className="p-5 sm:p-7">
                   <p className="text-lg font-bold text-[#12343a]">Appointment details</p>
                   <dl className="mt-5 grid gap-3 sm:grid-cols-2">
+                    <div className="min-w-0 rounded-2xl bg-teal-50 p-4"><dt className="text-xs font-semibold uppercase tracking-wide text-teal-800">Booked for</dt><dd className="mt-1 break-words font-bold text-slate-900">{booking.name}</dd></div>
                     <div className="rounded-2xl bg-sky-50 p-4"><dt className="text-xs font-semibold uppercase tracking-wide text-sky-800">Appointment date</dt><dd className="mt-1 font-bold text-slate-900">{booking.appointmentDate}</dd></div>
                     <div className="rounded-2xl bg-violet-50 p-4"><dt className="text-xs font-semibold uppercase tracking-wide text-violet-800">Appointment time</dt><dd className="mt-1 font-bold text-slate-900">{booking.appointmentTime}</dd></div>
                     <div className="rounded-2xl bg-teal-50 p-4"><dt className="text-xs font-semibold uppercase tracking-wide text-teal-800">Full service cost</dt><dd className="mt-1 font-bold text-slate-900">${booking.servicePrice.toFixed(2)}</dd></div>
@@ -152,7 +155,7 @@ function PaymentPage() {
                     <div className="mt-6 rounded-2xl border border-teal-200 bg-gradient-to-r from-teal-50 to-cyan-50 p-5">
                       <h3 className="font-bold text-[#12343a]">Choose your secure payment method</h3>
                       <p className="mt-2 text-sm leading-6 text-slate-700">
-                        Pay the 30% booking fee of <strong>${booking.depositAmount.toFixed(2)}</strong>. Your fee is credited toward the service total; the remaining balance is due at the clinic.
+                        Pay the 30% booking fee of <strong>${booking.depositAmount.toFixed(2)}</strong> to reserve this appointment time and allow our team to prepare for your visit. The fee is credited toward your service total; the remaining balance is due at the clinic.
                       </p>
                       <PayPalCheckout ticketNumber={booking.ticketNumber} onPaid={handlePaymentConfirmed} />
                     </div>

@@ -12,7 +12,7 @@ export async function GET(request: Request) {
 
   const { data, error } = await supabase
     .from("bookings")
-    .select("ticket_number, service_name, service_description, service_price, deposit_amount, balance_amount, appointment_date, appointment_time, booking_status, payment_status")
+    .select("ticket_number, customer_name, service_name, service_description, service_price, deposit_amount, balance_amount, appointment_date, appointment_time, booking_status, payment_status")
     .eq("ticket_number", ticketNumber)
     .maybeSingle();
 
@@ -27,6 +27,7 @@ export async function GET(request: Request) {
   return NextResponse.json({
     booking: {
       ticketNumber: data.ticket_number,
+      name: data.customer_name,
       serviceName: data.service_name,
       serviceDescription: data.service_description,
       servicePrice: Number(data.service_price),

@@ -15,7 +15,8 @@ type ClinicService = {
 
 const appointmentTimes = ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00"];
 const minBookingDate = new Date(Date.now() - new Date().getTimezoneOffset() * 60_000).toISOString().slice(0, 10);
-const fieldClass = "mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-slate-900 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-700/15";
+const fieldClass = "mt-2 min-h-12 min-w-0 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none transition focus:border-teal-700 focus:ring-2 focus:ring-teal-700/15";
+const requiredLabel = <span className="ml-2 inline-flex rounded-full bg-teal-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-teal-800">Required</span>;
 
 function BookingForm() {
   const router = useRouter();
@@ -103,6 +104,10 @@ function BookingForm() {
           <p className="mt-4 text-sm leading-7 text-slate-600 sm:text-base">
             Choose a clinic service and preferred appointment time. After you book, we’ll open your payment page so you can pay the deposit right away. We’ll email your booking details, and you can use your booking number and email address to check your status later.
           </p>
+          <div className="mt-5 rounded-2xl border border-teal-200 bg-teal-50 p-4 text-sm leading-6 text-teal-950 sm:p-5">
+            <p className="font-bold">Why is there a booking fee?</p>
+            <p className="mt-1">The 30% fee reserves your chosen appointment time and helps our team prepare for your visit. It goes toward the service total, so you only pay the remaining balance at the clinic.</p>
+          </div>
 
           {isLoadingServices ? (
             <p role="status" className="mt-8 rounded-xl bg-slate-50 p-4 text-sm text-slate-600">Loading available clinic services…</p>
@@ -112,7 +117,9 @@ function BookingForm() {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+              <p className="text-xs leading-5 text-slate-500">{requiredLabel} fields must be completed. Fields marked Optional can be left blank.</p>
               <label className="block text-sm font-semibold text-slate-700">Dental service
+                {requiredLabel}
                 <select required value={serviceId} onChange={(event) => setServiceId(event.target.value)} className={fieldClass}>
                   {services.map((service) => <option key={service.id} value={service.id}>{service.name} · ${service.cost.toFixed(2)}</option>)}
                 </select>
@@ -129,28 +136,34 @@ function BookingForm() {
                 </div>
               )}
               <div className="grid gap-5 sm:grid-cols-2">
-                <label className="block text-sm font-semibold text-slate-700">Your full name
+                <label className="block min-w-0 text-sm font-semibold text-slate-700">Your full name
+                  {requiredLabel}
                   <input required maxLength={120} autoComplete="name" value={name} onChange={(event) => setName(event.target.value)} className={fieldClass} placeholder="Full name" />
                 </label>
-                <label className="block text-sm font-semibold text-slate-700">Email address
+                <label className="block min-w-0 text-sm font-semibold text-slate-700">Email address
+                  {requiredLabel}
                   <input required type="email" maxLength={254} autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} className={fieldClass} placeholder="you@example.com" />
                 </label>
-                <label className="block text-sm font-semibold text-slate-700">Phone number
+                <label className="block min-w-0 text-sm font-semibold text-slate-700">Phone number
+                  {requiredLabel}
                   <input required type="tel" maxLength={40} autoComplete="tel" value={phone} onChange={(event) => setPhone(event.target.value)} className={fieldClass} placeholder="(555) 555-0123" />
                 </label>
-                <label className="block text-sm font-semibold text-slate-700">Preferred date
+                <label className="block min-w-0 text-sm font-semibold text-slate-700">Preferred date
+                  {requiredLabel}
                   <input required type="date" min={minBookingDate} value={date} onChange={(event) => setDate(event.target.value)} className={fieldClass} />
                 </label>
               </div>
               <label className="block text-sm font-semibold text-slate-700">Preferred appointment time
+                {requiredLabel}
                 <select required value={time} onChange={(event) => setTime(event.target.value)} className={fieldClass}>
                   {appointmentTimes.map((slot) => <option key={slot} value={slot}>{slot}</option>)}
                 </select>
               </label>
-              <label className="block text-sm font-semibold text-slate-700">Anything you’d like us to know? <span className="font-normal text-slate-500">(optional)</span>
+              <label className="block text-sm font-semibold text-slate-700">Anything you’d like us to know? <span className="ml-2 inline-flex rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-slate-600">Optional</span>
+                <span className="mt-1 block text-xs font-normal text-slate-500">Please don’t include sensitive medical information.</span>
                 <textarea maxLength={2000} rows={4} value={notes} onChange={(event) => setNotes(event.target.value)} placeholder="Please don’t include sensitive medical information." className={`${fieldClass} resize-y`} />
               </label>
-              <button type="submit" disabled={isSubmitting} className="w-full rounded-full bg-teal-800 px-6 py-4 font-bold text-white transition hover:bg-[#12343a] disabled:cursor-not-allowed disabled:opacity-60">
+              <button type="submit" disabled={isSubmitting} className="min-h-12 w-full rounded-full bg-teal-800 px-6 py-4 font-bold text-white transition hover:bg-[#12343a] disabled:cursor-not-allowed disabled:opacity-60">
                 {isSubmitting ? "Creating your booking…" : `Book visit · pay $${selectedService?.bookingFee.toFixed(2) ?? "0.00"} fee`}
               </button>
               {message && <p role="alert" className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm leading-6 text-red-800">{message}</p>}

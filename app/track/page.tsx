@@ -61,15 +61,19 @@ function BookingTracker() {
           <p className="text-xs font-bold uppercase tracking-[0.22em] text-teal-700">Your visit, made simple</p>
           <h1 className="mt-3 text-3xl font-black tracking-tight text-[#12343a] sm:text-4xl">Track your booking</h1>
           <p className="mt-3 text-sm leading-6 text-slate-600">Enter your booking number and the email address you used when booking to check your appointment and payment status.</p>
+          <div className="mt-5 rounded-2xl border border-teal-200 bg-teal-50 p-4 text-sm leading-6 text-teal-950 sm:p-5">
+            <p className="font-bold">Why is there a booking fee?</p>
+            <p className="mt-1">It reserves your appointment time and helps our team prepare for your visit. The fee is applied toward your service total; the remaining balance is due at the clinic.</p>
+          </div>
 
-          <form onSubmit={lookup} className="mt-6 grid gap-3 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
-            <label className="block text-sm font-semibold text-slate-700" htmlFor="ticket-number">Booking number
-              <input id="ticket-number" required maxLength={64} value={input} onChange={(event) => setInput(event.target.value.toUpperCase())} placeholder="10-character booking code" className="mt-2 min-h-12 w-full rounded-xl border border-slate-200 px-4 outline-none focus:border-teal-700" />
+          <form onSubmit={lookup} className="mt-6 grid min-w-0 gap-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] sm:items-end">
+            <label className="block min-w-0 text-sm font-semibold text-slate-700" htmlFor="ticket-number">Booking number <span className="ml-2 inline-flex rounded-full bg-teal-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-teal-800">Required</span>
+              <input id="ticket-number" required maxLength={64} value={input} onChange={(event) => setInput(event.target.value.toUpperCase())} placeholder="10-character booking code" className="mt-2 min-h-12 min-w-0 w-full rounded-xl border border-slate-200 px-4 outline-none focus:border-teal-700" />
             </label>
-            <label className="block text-sm font-semibold text-slate-700" htmlFor="booking-email">Email address
-              <input id="booking-email" required type="email" maxLength={254} autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" className="mt-2 min-h-12 w-full rounded-xl border border-slate-200 px-4 outline-none focus:border-teal-700" />
+            <label className="block min-w-0 text-sm font-semibold text-slate-700" htmlFor="booking-email">Email address <span className="ml-2 inline-flex rounded-full bg-teal-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-teal-800">Required</span>
+              <input id="booking-email" required type="email" maxLength={254} autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" className="mt-2 min-h-12 min-w-0 w-full rounded-xl border border-slate-200 px-4 outline-none focus:border-teal-700" />
             </label>
-            <button disabled={loading} className="min-h-12 rounded-full bg-[#12343a] px-6 font-bold text-white transition hover:bg-teal-800 disabled:opacity-60">{loading ? "Looking up…" : "Find booking"}</button>
+            <button disabled={loading} className="min-h-12 w-full rounded-full bg-[#12343a] px-6 font-bold text-white transition hover:bg-teal-800 disabled:opacity-60 sm:w-auto">{loading ? "Looking up…" : "Find booking"}</button>
           </form>
           {error && <p role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">{error}</p>}
           {booking && (
@@ -78,7 +82,8 @@ function BookingTracker() {
                 <div className="min-w-0"><p className="text-xs font-bold uppercase tracking-widest text-teal-700">Booking number</p><h2 className="mt-1 break-all text-lg font-black text-[#12343a] sm:text-xl">{booking.ticketNumber}</h2></div>
                 <span className={`rounded-full px-3 py-1.5 text-xs font-bold capitalize ${booking.paymentStatus === "paid" ? "bg-emerald-100 text-emerald-800" : "bg-amber-100 text-amber-900"}`}>{booking.paymentStatus === "paid" ? "Fee paid" : "Fee due"}</span>
               </div>
-              <p className="mt-5 font-bold text-slate-900">{booking.name}</p>
+              <p className="mt-5 text-xs font-bold uppercase tracking-wide text-slate-500">Booked for</p>
+              <p className="mt-1 break-words font-bold text-slate-900">{booking.name}</p>
               <p className="mt-1 text-sm font-semibold text-slate-700">{booking.serviceName}</p>
               <p className="mt-2 text-sm leading-6 text-slate-600">{booking.serviceDescription}</p>
               <dl className="mt-5 grid gap-3 text-sm sm:grid-cols-2">
