@@ -26,18 +26,16 @@ declare global {
 
 export function PayPalCheckout({
   ticketNumber,
-  email,
   onPaid,
 }: {
   ticketNumber: string;
-  email: string;
   onPaid: (message: string) => void;
 }) {
   const [error, setError] = useState("");
   const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
 
   useEffect(() => {
-    if (!clientId || !ticketNumber || !email) return;
+    if (!clientId || !ticketNumber) return;
     let cancelled = false;
 
     async function setupButtons(paypal: PayPalNamespace) {
@@ -51,7 +49,7 @@ export function PayPalCheckout({
             const response = await fetch("/api/paypal/create-order", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ ticketNumber, email, paymentMethod }),
+              body: JSON.stringify({ ticketNumber, paymentMethod }),
             });
             const result = await response.json();
             if (!response.ok) throw new Error(result.error ?? "Unable to start checkout.");
@@ -62,7 +60,7 @@ export function PayPalCheckout({
             const response = await fetch("/api/paypal/capture-order", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ orderID: data.orderID, ticketNumber, email }),
+              body: JSON.stringify({ orderID: data.orderID, ticketNumber }),
             });
             const result = await response.json();
             if (!response.ok) throw new Error(result.error ?? "Payment confirmation failed.");
@@ -100,7 +98,7 @@ export function PayPalCheckout({
       document.body.appendChild(script);
     }
     return () => { cancelled = true; };
-  }, [clientId, email, onPaid, ticketNumber]);
+  }, [clientId, onPaid, ticketNumber]);
 
   if (!clientId) {
     return <p role="status" className="mt-4 rounded-xl bg-amber-50 p-4 text-sm leading-6 text-amber-900">

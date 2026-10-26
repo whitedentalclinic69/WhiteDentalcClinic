@@ -9,17 +9,13 @@ export async function POST(request: Request) {
       body && typeof body === "object" && "ticketNumber" in body && typeof body.ticketNumber === "string"
         ? body.ticketNumber.trim()
         : "";
-    const email =
-      body && typeof body === "object" && "email" in body && typeof body.email === "string"
-        ? body.email.trim()
-        : "";
     const paymentMethod =
       body && typeof body === "object" && "paymentMethod" in body && body.paymentMethod === "card"
         ? "card"
         : "paypal";
 
-    if (!ticketNumber || ticketNumber.length > 64 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) {
-      return NextResponse.json({ error: "Enter a valid booking number and email address." }, { status: 400 });
+    if (!ticketNumber || ticketNumber.length > 64) {
+      return NextResponse.json({ error: "Enter a valid booking number." }, { status: 400 });
     }
     if (!supabase) {
       return NextResponse.json({ error: "Booking payment storage is not configured." }, { status: 503 });
@@ -27,17 +23,14 @@ export async function POST(request: Request) {
 
     const { data: booking, error } = await supabase
       .from("bookings")
-      .select("ticket_number, customer_email, service_name, deposit_amount, payment_status")
+      .select("ticket_number, service_name, deposit_amount, payment_status")
       .eq("ticket_number", ticketNumber)
       .maybeSingle();
     if (error) {
       console.error("PayPal booking lookup failed:", error.message);
-      return NextResponse.json({ error: "Unable to verify this booking for payment." }, { status: 500 });
+      return NextResponse.json({ error: "Unable to load this booking for payment." }, { status: 500 });
     }
     if (!booking) return NextResponse.json({ error: "Booking not found. Check your booking number." }, { status: 404 });
-    if (booking.customer_email.toLowerCase() !== email.toLowerCase()) {
-      return NextResponse.json({ error: "The booking number or email address does not match our records." }, { status: 404 });
-    }
     if (booking.payment_status === "paid") {
       return NextResponse.json({ error: "This booking fee has already been paid." }, { status: 409 });
     }

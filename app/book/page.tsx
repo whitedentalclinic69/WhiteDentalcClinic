@@ -101,7 +101,7 @@ function BookingForm() {
           <p className="text-xs font-bold uppercase tracking-[0.22em] text-teal-700">A thoughtful first step</p>
           <h1 className="mt-3 text-3xl font-black tracking-tight text-[#12343a] sm:text-5xl">Book your dental visit</h1>
           <p className="mt-4 text-sm leading-7 text-slate-600 sm:text-base">
-            Choose a clinic service and a preferred appointment time. Your booking stays pending until the 30% fee is confirmed. We’ll email your payment link and issue your downloadable ticket after successful payment.
+            Choose a clinic service and preferred appointment time. After you book, we’ll open your payment page so you can pay the deposit right away. We’ll email your booking details, and you can use your booking number and email address to check your status later.
           </p>
 
           {isLoadingServices ? (

@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
@@ -23,20 +23,23 @@ function BookingTracker() {
   const searchParams = useSearchParams();
   const ticketNumber = searchParams.get("ticketNumber")?.trim() ?? "";
   const [input, setInput] = useState(ticketNumber);
+  const [email, setEmail] = useState("");
   const [booking, setBooking] = useState<Booking | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const loadBooking = useCallback(async (number: string) => {
-    if (!number) return;
+  const loadBooking = useCallback(async (number: string, bookingEmail: string) => {
+    if (!number || !bookingEmail) return;
     setLoading(true);
     setError("");
     try {
-      const response = await fetch(`/api/bookings?ticketNumber=${encodeURIComponent(number)}`, { cache: "no-store" });
+      const params = new URLSearchParams({ ticketNumber: number, email: bookingEmail });
+      const response = await fetch(`/api/bookings?${params}`, { cache: "no-store" });
       const result = await response.json();
       if (!response.ok) throw new Error(result.error ?? "Unable to find this booking.");
       setBooking(result.booking as Booking);
       setInput(number);
+      setEmail(bookingEmail);
     } catch (cause) {
       setBooking(null);
       setError(cause instanceof Error ? cause.message : "Unable to find this booking.");
@@ -45,15 +48,9 @@ function BookingTracker() {
     }
   }, []);
 
-  useEffect(() => {
-    if (!ticketNumber) return;
-    const timer = window.setTimeout(() => void loadBooking(ticketNumber), 0);
-    return () => window.clearTimeout(timer);
-  }, [loadBooking, ticketNumber]);
-
   async function lookup(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    await loadBooking(input.trim());
+    await loadBooking(input.trim(), email.trim());
   }
 
   return (
@@ -63,11 +60,15 @@ function BookingTracker() {
         <section className="mt-8 rounded-3xl border border-slate-200 bg-white p-6 shadow-xl shadow-slate-900/5 sm:p-10">
           <p className="text-xs font-bold uppercase tracking-[0.22em] text-teal-700">Your visit, made simple</p>
           <h1 className="mt-3 text-3xl font-black tracking-tight text-[#12343a] sm:text-4xl">Track your booking</h1>
-          <p className="mt-3 text-sm leading-6 text-slate-600">Enter your booking number to check your appointment and payment status. The booking number is included in your booking email.</p>
+          <p className="mt-3 text-sm leading-6 text-slate-600">Enter your booking number and the email address you used when booking to check your appointment and payment status.</p>
 
-          <form onSubmit={lookup} className="mt-6 flex flex-col gap-3 sm:flex-row">
-            <label className="sr-only" htmlFor="ticket-number">Booking number</label>
-            <input id="ticket-number" required maxLength={64} value={input} onChange={(event) => setInput(event.target.value)} placeholder="WDC-…" className="min-h-12 flex-1 rounded-xl border border-slate-200 px-4 outline-none focus:border-teal-700" />
+          <form onSubmit={lookup} className="mt-6 grid gap-3 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
+            <label className="block text-sm font-semibold text-slate-700" htmlFor="ticket-number">Booking number
+              <input id="ticket-number" required maxLength={64} value={input} onChange={(event) => setInput(event.target.value)} placeholder="WDC-…" className="mt-2 min-h-12 w-full rounded-xl border border-slate-200 px-4 outline-none focus:border-teal-700" />
+            </label>
+            <label className="block text-sm font-semibold text-slate-700" htmlFor="booking-email">Email address
+              <input id="booking-email" required type="email" maxLength={254} autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="you@example.com" className="mt-2 min-h-12 w-full rounded-xl border border-slate-200 px-4 outline-none focus:border-teal-700" />
+            </label>
             <button disabled={loading} className="min-h-12 rounded-full bg-[#12343a] px-6 font-bold text-white transition hover:bg-teal-800 disabled:opacity-60">{loading ? "Looking up…" : "Find booking"}</button>
           </form>
           {error && <p role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">{error}</p>}
@@ -98,7 +99,7 @@ function BookingTracker() {
                 <div className="mt-6 rounded-xl border border-teal-200 bg-white p-4 sm:p-5">
                   <h3 className="font-bold text-[#12343a]">Booking fee pending</h3>
                   <p className="mt-1 text-sm text-slate-600">Your appointment will be confirmed after the 30% booking fee is verified.</p>
-                  <Link href={`/pay?ticketNumber=${encodeURIComponent(booking.ticketNumber)}`} className="mt-4 inline-flex min-h-11 items-center rounded-full bg-teal-800 px-5 text-sm font-bold text-white hover:bg-[#12343a]">Verify email and pay ${booking.depositAmount.toFixed(2)}</Link>
+                  <Link href={`/pay?ticketNumber=${encodeURIComponent(booking.ticketNumber)}`} className="mt-4 inline-flex min-h-11 items-center rounded-full bg-teal-800 px-5 text-sm font-bold text-white hover:bg-[#12343a]">Pay ${booking.depositAmount.toFixed(2)} booking fee</Link>
                 </div>
               )}
             </article>

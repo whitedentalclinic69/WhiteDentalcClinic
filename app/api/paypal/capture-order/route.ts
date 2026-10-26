@@ -27,11 +27,7 @@ export async function POST(request: Request) {
       body && typeof body === "object" && "ticketNumber" in body && typeof body.ticketNumber === "string"
         ? body.ticketNumber.trim()
         : "";
-    const email =
-      body && typeof body === "object" && "email" in body && typeof body.email === "string"
-        ? body.email.trim()
-        : "";
-    if (!orderID || !ticketNumber || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) {
+    if (!orderID || !ticketNumber) {
       return NextResponse.json({ error: "Missing or invalid PayPal booking details." }, { status: 400 });
     }
     if (!supabase) {
@@ -45,12 +41,9 @@ export async function POST(request: Request) {
       .maybeSingle();
     if (bookingError) {
       console.error("PayPal capture booking lookup failed:", bookingError.message);
-      return NextResponse.json({ error: "Unable to verify this booking." }, { status: 500 });
+      return NextResponse.json({ error: "Unable to load this booking." }, { status: 500 });
     }
     if (!booking) return NextResponse.json({ error: "Booking not found." }, { status: 404 });
-    if (booking.customer_email.toLowerCase() !== email.toLowerCase()) {
-      return NextResponse.json({ error: "The booking number or email address does not match our records." }, { status: 404 });
-    }
     if (booking.payment_status === "paid") {
       return NextResponse.json({ error: "This booking fee has already been paid." }, { status: 409 });
     }

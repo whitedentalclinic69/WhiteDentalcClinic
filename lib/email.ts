@@ -71,25 +71,23 @@ function bookingEmailLayout(
 <p>Warm regards,<br><strong>White Dental Clinic</strong></p></div></div></body></html>`;
 }
 
-export async function sendBookingConfirmationEmail(
-  booking: BookingDocumentData,
-) {
+export async function sendBookingConfirmationEmail(booking: BookingDocumentData) {
   const paymentLink = `${appUrl()}/pay?ticketNumber=${encodeURIComponent(booking.ticketNumber)}`;
   const trackingLink = `${appUrl()}/track?ticketNumber=${encodeURIComponent(booking.ticketNumber)}`;
   await sendConfiguredEmail({
     to: booking.email,
-    subject: `Booking pending payment · ${booking.ticketNumber} · White Dental Clinic`,
+    subject: `Your White Dental Clinic appointment request · ${booking.ticketNumber}`,
     html: bookingEmailLayout(
-      "Your booking is pending payment",
+      "Your appointment request is saved",
       booking.name,
-      `We have received your request for ${escapeHtml(booking.service)} on ${escapeHtml(booking.date)} at ${escapeHtml(booking.time)}. Your 30% booking fee is $${booking.depositAmount.toFixed(2)} of the $${booking.totalCost.toFixed(2)} service cost. The fee reserves your requested appointment time and helps our team prepare for your visit; it is credited toward the service total, with the remaining balance due at the clinic. Your appointment is confirmed and your ticket is issued only after the payment is verified.`,
+      `We received your request for ${escapeHtml(booking.service)} on ${escapeHtml(booking.date)} at ${escapeHtml(booking.time)}. The service total is $${booking.totalCost.toFixed(2)} and the 30% booking fee is $${booking.depositAmount.toFixed(2)}. Continue to the secure payment page to pay your booking fee. Your appointment will be confirmed and your colorful booking ticket will be issued after payment is verified.`,
       booking.ticketNumber,
       paymentLink,
-      "Verify your email and pay booking fee",
+      "Continue to secure payment",
       trackingLink,
-      "Track booking status",
+      "Check booking status",
     ),
-    text: `Hello ${booking.name},\n\nWhite Dental Clinic received your request for ${booking.service} on ${booking.date} at ${booking.time}.\nService description: ${booking.description}\nTotal service cost: $${booking.totalCost.toFixed(2)}\n30% booking fee: $${booking.depositAmount.toFixed(2)}\n\nThe booking fee reserves your requested appointment time and helps our team prepare for your visit. It is credited toward the service total; the remaining balance is due at the clinic. Your appointment will be confirmed and your booking ticket issued after payment is verified.\n\nBooking number: ${booking.ticketNumber}\nVerify your email and pay: ${paymentLink}\nTrack booking status: ${trackingLink}\n\nIf you don't see our email, please check your spam or junk folder.\n\nWhite Dental Clinic`,
+    text: `Hello ${booking.name},\n\nWe received your appointment request at White Dental Clinic.\nService: ${booking.service}\nService description: ${booking.description}\nAppointment: ${booking.date} at ${booking.time}\nTotal service cost: $${booking.totalCost.toFixed(2)}\n30% booking fee: $${booking.depositAmount.toFixed(2)}\nBooking number: ${booking.ticketNumber}\n\nContinue directly to the secure payment page to pay your booking fee:\n${paymentLink}\n\nYou can check your booking status using your booking number and the email address you used when booking:\n${trackingLink}\n\nYour appointment is confirmed and your colorful booking ticket is emailed after payment is verified. If you don't see our email, please check your spam or junk folder.\n\nWhite Dental Clinic`,
   });
 }
 
@@ -102,18 +100,18 @@ export async function sendPaymentConfirmationEmail(
   const receipt = createBookingDocument(booking, "receipt");
   await sendConfiguredEmail({
     to: booking.email,
-    subject: `Payment confirmed for ${booking.ticketNumber} · White Dental Clinic`,
+    subject: `Congratulations, you're booked! · White Dental Clinic`,
     html: bookingEmailLayout(
-      "Your booking fee is confirmed",
+      "Congratulations, you're booked!",
       booking.name,
-      `Welcome to White Dental Clinic. Your $${booking.depositAmount.toFixed(2)} booking fee for ${escapeHtml(booking.service)} has been verified. Your appointment is confirmed for ${escapeHtml(booking.date)} at ${escapeHtml(booking.time)}. Your booking ticket and payment receipt are attached.`,
+      `Congratulations and welcome to White Dental Clinic! Your $${booking.depositAmount.toFixed(2)} booking fee for ${escapeHtml(booking.service)} has been verified. We look forward to welcoming you on ${escapeHtml(booking.date)} at ${escapeHtml(booking.time)}. Use your booking number and this email address to check your status later. Your colorful booking ticket and payment receipt are attached.`,
       booking.ticketNumber,
       link,
       "Track your confirmed booking",
       ticketLink,
       "Download booking ticket",
     ),
-    text: `Hello ${booking.name},\n\nWelcome to White Dental Clinic. Your $${booking.depositAmount.toFixed(2)} booking fee for ${booking.service} has been verified. Your appointment is confirmed for ${booking.date} at ${booking.time}.\nBooking number: ${booking.ticketNumber}\n\nYour booking ticket and payment receipt are attached. Track your booking or download them again: ${link}\nIf you don't see our email, please check your spam or junk folder.\n\nWhite Dental Clinic`,
+    text: `Hello ${booking.name},\n\nWelcome to White Dental Clinic. Your $${booking.depositAmount.toFixed(2)} booking fee for ${booking.service} has been verified. Your appointment is confirmed for ${booking.date} at ${booking.time}.\nBooking number: ${booking.ticketNumber}\n\nYour booking ticket and payment receipt are attached. To check your status or download them again, enter your booking number and this email address here: ${link}\nIf you don't see our email, please check your spam or junk folder.\n\nWhite Dental Clinic`,
     attachments: [
       {
         filename: `White-Dental-Clinic-ticket-${booking.ticketNumber}.html`,

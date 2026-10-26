@@ -7,10 +7,12 @@ import { supabase } from "../../../lib/supabase";
 const appointmentTimes = ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00"];
 
 export async function GET(request: Request) {
-  const ticketNumber = new URL(request.url).searchParams.get("ticketNumber")?.trim();
+  const searchParams = new URL(request.url).searchParams;
+  const ticketNumber = searchParams.get("ticketNumber")?.trim();
+  const email = searchParams.get("email")?.trim();
 
-  if (!ticketNumber || ticketNumber.length > 64) {
-    return NextResponse.json({ error: "Enter a valid ticket number." }, { status: 400 });
+  if (!ticketNumber || ticketNumber.length > 64 || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) {
+    return NextResponse.json({ error: "Enter your booking number and booking email address." }, { status: 400 });
   }
 
   if (!supabase) {
@@ -23,7 +25,7 @@ export async function GET(request: Request) {
   try {
     const { data, error } = await supabase
       .from("bookings")
-      .select("ticket_number, customer_name, service_name, service_description, service_price, deposit_amount, balance_amount, appointment_date, appointment_time, booking_status, payment_status, paid_at")
+      .select("ticket_number, customer_name, customer_email, service_name, service_description, service_price, deposit_amount, balance_amount, appointment_date, appointment_time, booking_status, payment_status, paid_at")
       .eq("ticket_number", ticketNumber)
       .maybeSingle();
 
@@ -38,6 +40,12 @@ export async function GET(request: Request) {
     if (!data) {
       return NextResponse.json(
         { error: "Ticket not found. Check the number and try again." },
+        { status: 404 },
+      );
+    }
+    if (data.customer_email.toLowerCase() !== email.toLowerCase()) {
+      return NextResponse.json(
+        { error: "The booking number or email address does not match our records." },
         { status: 404 },
       );
     }
@@ -136,7 +144,7 @@ export async function POST(request: Request) {
 
     const depositAmount = Math.round(servicePrice * 30) / 100;
     const balanceAmount = servicePrice - depositAmount;
-    const generatedTicketNumber = `WDC-${date.replace(/-/g, "")}-${randomUUID().slice(0, 8).toUpperCase()}`;
+    const generatedTicketNumber = `WDC-${date.replace(/-/g, "")}-${randomUUID().replace(/-/g, "").toUpperCase()}`;
 
     const { data, error } = await supabase
       .from("bookings")
@@ -169,6 +177,7 @@ export async function POST(request: Request) {
     }
 
     let emailSent = true;
+    const ticketNumber = data?.ticket_number ?? generatedTicketNumber;
     try {
       await sendBookingConfirmationEmail({
         name,
@@ -191,10 +200,10 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         message: emailSent
-          ? "Your booking is pending payment. Check your email for the booking number and secure payment link."
-          : "Your booking is saved, but its email could not be delivered. You can continue to payment now; please check your spam folder and contact the clinic if the email is still missing.",
+          ? "Your booking is saved. Continue to the payment page to pay your booking fee."
+          : "Your booking is saved, but we could not send the confirmation email. You can continue to payment now.",
         emailSent,
-        ticketNumber: data?.ticket_number ?? generatedTicketNumber,
+        ticketNumber,
         bookingId: data?.id ?? null,
         bookingStatus: "pending",
         paymentStatus: "unpaid",
