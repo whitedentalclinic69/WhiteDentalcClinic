@@ -32,7 +32,7 @@ export function createBookingDocument(
   const amountLabel = receipt || paymentStatus === "Paid" ? "Booking fee paid" : "Booking fee due (30%)";
   const amount = booking.depositAmount;
   const details = [
-    ["Booking number", booking.ticketNumber],
+    ["Booking code", booking.ticketNumber],
     ["Patient", booking.name],
     ["Email", booking.email],
     ["Phone", booking.phone],

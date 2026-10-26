@@ -25,7 +25,7 @@ This app is already wired to send customer emails with Nodemailer. To enable it:
 
 1. In your Gmail account, create an App Password.
 2. Put the real Gmail address and app password in the environment variables in `.env.local` or in Vercel's project settings.
-3. Set `APP_URL` to the production domain for White Dental Clinic.
+3. Set `APP_URL` to the public HTTPS domain for White Dental Clinic. Vercel deployments can fall back to the production project URL automatically. Email links never use localhost; configure `APP_URL` for local email testing too.
 4. Use the same Gmail account in `SMTP_USER` and `EMAIL_FROM` unless you have a verified custom domain.
 
 Example:

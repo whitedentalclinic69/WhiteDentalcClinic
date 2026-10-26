@@ -1,7 +1,40 @@
 import nodemailer, { type SendMailOptions } from "nodemailer";
 import { createBookingDocument, type BookingDocumentData } from "./booking-documents";
 
-const appUrl = () => (process.env.APP_URL || "http://localhost:3000").replace(/\/+$/, "");
+function appUrl() {
+  const configuredUrl = process.env.APP_URL?.trim();
+  const isLocalUrl = (value: string) => /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?(?:\/|$)/i.test(value);
+  const configuredPublicUrl = configuredUrl && !isLocalUrl(configuredUrl)
+    ? configuredUrl
+    : undefined;
+  const deploymentHost = process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL;
+  const candidate = configuredPublicUrl || deploymentHost;
+
+  if (!candidate) {
+    throw new Error("Public email links are not configured. Set APP_URL to the clinic's public HTTPS website URL.");
+  }
+
+  const normalizedUrl = /^[a-z][a-z\d+.-]*:\/\//i.test(candidate)
+    ? candidate
+    : `https://${candidate}`;
+  let url: URL;
+  try {
+    url = new URL(normalizedUrl);
+  } catch {
+    throw new Error("APP_URL must be a valid public website URL.");
+  }
+
+  if (
+    url.protocol !== "https:" ||
+    url.username ||
+    url.password ||
+    isLocalUrl(url.toString())
+  ) {
+    throw new Error("APP_URL must be a public HTTPS website URL, not a localhost address.");
+  }
+
+  return `${url.origin}${url.pathname}`.replace(/\/+$/, "");
+}
 
 const escapeHtml = (value: string) =>
   value
@@ -64,10 +97,10 @@ function bookingEmailLayout(
 <div style="padding:22px;text-align:center;background:#102c35;color:white;font-weight:bold;letter-spacing:.12em">WHITE DENTAL CLINIC</div>
 <div style="padding:30px"><p style="margin-top:0;color:#126d69;font-size:12px;font-weight:bold;letter-spacing:.14em;text-transform:uppercase">Dallas · Thoughtful dental care</p>
 <h1 style="color:#102c35">${escapeHtml(title)}</h1><p>Hello ${escapeHtml(name)},</p><p>${message}</p>
-<p><strong>Booking number: ${escapeHtml(ticketNumber)}</strong></p>
+<p><strong>Booking code: ${escapeHtml(ticketNumber)}</strong></p>
 <p><a href="${escapeHtml(primaryLink)}" style="display:inline-block;padding:13px 20px;border-radius:999px;background:#126d69;color:white;text-decoration:none;font-weight:bold">${escapeHtml(primaryLabel)}</a></p>
 <p><a href="${escapeHtml(secondaryLink)}" style="display:inline-block;padding:11px 18px;border:1px solid #126d69;border-radius:999px;color:#126d69;text-decoration:none;font-weight:bold">${escapeHtml(secondaryLabel)}</a></p>
-<p>If you don’t see a message from us after completing payment, please check your spam or junk folder.</p>
+<p>If you don’t see our email, please check your spam or junk folder.</p>
 <p>Warm regards,<br><strong>White Dental Clinic</strong></p></div></div></body></html>`;
 }
 
@@ -75,18 +108,18 @@ export async function sendBookingConfirmationEmail(booking: BookingDocumentData)
   const bookingActionsLink = `${appUrl()}/booking-options?ticketNumber=${encodeURIComponent(booking.ticketNumber)}`;
   await sendConfiguredEmail({
     to: booking.email,
-    subject: `Your White Dental Clinic appointment request · ${booking.ticketNumber}`,
+    subject: `Thank you for choosing White Dental Clinic`,
     html: bookingEmailLayout(
-      "Your appointment request is saved",
+      "Your care begins with a warm welcome",
       booking.name,
-      `We received your request for ${escapeHtml(booking.service)} on ${escapeHtml(booking.date)} at ${escapeHtml(booking.time)}. The service total is $${booking.totalCost.toFixed(2)} and the 30% booking fee is $${booking.depositAmount.toFixed(2)}. Continue to the secure payment page to pay your booking fee. Your appointment will be confirmed and your colorful booking ticket will be issued after payment is verified.`,
+      `We’re pleased to have received your appointment request for ${escapeHtml(booking.service)} on ${escapeHtml(booking.date)} at ${escapeHtml(booking.time)}. At White Dental Clinic, we want every visit to feel welcoming, thoughtful, and tailored to you. Your service total is $${booking.totalCost.toFixed(2)}, with a 30% booking deposit of $${booking.depositAmount.toFixed(2)}. Choose an option below to continue.`,
       booking.ticketNumber,
       bookingActionsLink,
-      "Pay deposit",
+      "Pay your deposit",
       bookingActionsLink,
-      "Check booking status",
+      "View or check your booking",
     ),
-    text: `Hello ${booking.name},\n\nWe received your appointment request at White Dental Clinic.\nService: ${booking.service}\nService description: ${booking.description}\nAppointment: ${booking.date} at ${booking.time}\nTotal service cost: $${booking.totalCost.toFixed(2)}\n30% booking fee: $${booking.depositAmount.toFixed(2)}\nBooking number: ${booking.ticketNumber}\n\nChoose whether to pay your booking fee or check booking status:\n${bookingActionsLink}\n\nChecking status requires your booking number and the email address you used when booking. Your appointment is confirmed and your colorful booking ticket is emailed after payment is verified. If you don't see our email, please check your spam or junk folder.\n\nWhite Dental Clinic`,
+    text: `Hello ${booking.name},\n\nThank you for choosing White Dental Clinic. We’re pleased to have received your appointment request, and we look forward to making your visit welcoming and comfortable.\n\nService: ${booking.service}\n${booking.description}\nAppointment requested: ${booking.date} at ${booking.time}\nService total: $${booking.totalCost.toFixed(2)}\nBooking deposit (30%): $${booking.depositAmount.toFixed(2)}\nBooking code: ${booking.ticketNumber}\n\nUse this page to pay your deposit or check your booking status:\n${bookingActionsLink}\n\nTo check your status, enter your booking code and the email address used when booking. Your appointment is confirmed once your deposit payment is verified. We’ll then email your booking ticket and receipt.\n\nWarm regards,\nWhite Dental Clinic`,
   });
 }
 
@@ -99,18 +132,18 @@ export async function sendPaymentConfirmationEmail(
   const receipt = createBookingDocument(booking, "receipt");
   await sendConfiguredEmail({
     to: booking.email,
-    subject: `Congratulations, you're booked! · White Dental Clinic`,
+    subject: `Your appointment is confirmed | White Dental Clinic`,
     html: bookingEmailLayout(
-      "Congratulations, you're booked!",
+      "Your smile is in good hands",
       booking.name,
-      `Congratulations and welcome to White Dental Clinic! Your $${booking.depositAmount.toFixed(2)} booking fee for ${escapeHtml(booking.service)} has been verified. We look forward to welcoming you on ${escapeHtml(booking.date)} at ${escapeHtml(booking.time)}. Use your booking number and this email address to check your status later. Your colorful booking ticket and payment receipt are attached.`,
+      `Your $${booking.depositAmount.toFixed(2)} deposit for ${escapeHtml(booking.service)} has been securely confirmed. Your appointment is booked for ${escapeHtml(booking.date)} at ${escapeHtml(booking.time)}. Thank you for trusting White Dental Clinic with your care—we look forward to welcoming you and providing a thoughtful, comfortable visit. Your booking ticket and payment receipt are attached.`,
       booking.ticketNumber,
       link,
-      "Check booking status",
+      "View your booking",
       ticketLink,
       "Download booking ticket",
     ),
-    text: `Hello ${booking.name},\n\nWelcome to White Dental Clinic. Your $${booking.depositAmount.toFixed(2)} booking fee for ${booking.service} has been verified. Your appointment is confirmed for ${booking.date} at ${booking.time}.\nBooking number: ${booking.ticketNumber}\n\nYour booking ticket and payment receipt are attached. To check your status or download them again, use this page and enter your booking number and this email address: ${link}\nIf you don't see our email, please check your spam or junk folder.\n\nWhite Dental Clinic`,
+    text: `Hello ${booking.name},\n\nYour $${booking.depositAmount.toFixed(2)} deposit for ${booking.service} has been securely confirmed. Your appointment is booked for ${booking.date} at ${booking.time}.\nBooking code: ${booking.ticketNumber}\n\nThank you for trusting White Dental Clinic with your care. We look forward to welcoming you and providing a thoughtful, comfortable visit. Your booking ticket and payment receipt are attached.\n\nTo check your booking status or download your documents again, visit this page and enter your booking code and the email address used when booking:\n${link}\n\nWarm regards,\nWhite Dental Clinic`,
     attachments: [
       {
         filename: `White-Dental-Clinic-ticket-${booking.ticketNumber}.html`,
