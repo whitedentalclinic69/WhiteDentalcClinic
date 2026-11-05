@@ -165,7 +165,7 @@ function PaymentPage() {
             ) : null}
 
             <p className="mt-6 text-center text-sm text-slate-600">
-              Questions? Contact White Dental Clinic · 2717 Main Street, Dallas, TX 75226
+              Questions? Contact White Dental Clinic · 3840 104 Avenue NE, Calgary, Alberta, Canada
             </p>
           </div>
         </section>

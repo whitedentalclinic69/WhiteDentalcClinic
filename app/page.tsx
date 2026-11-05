@@ -182,7 +182,7 @@ export default function Home() {
           style={{ backgroundImage: "linear-gradient(90deg, rgba(12,12,12,.97) 0%, rgba(12,12,12,.84) 46%, rgba(12,12,12,.25) 100%), url('https://images.unsplash.com/photo-1609840114035-3c981b782dfe?auto=format&fit=crop&w=2000&q=90')" }}
         />
         <div className="relative mx-auto w-full max-w-7xl px-4 py-20 sm:px-5 sm:py-24 lg:px-8">
-          <p className="mb-6 text-[10px] font-bold uppercase tracking-[0.28em] text-[#58b4a7] sm:text-xs lg:text-sm">Dallas, Texas · Thoughtful dental care</p>
+          <p className="mb-6 text-[10px] font-bold uppercase tracking-[0.28em] text-[#58b4a7] sm:text-xs lg:text-sm">Calgary, Alberta · Thoughtful dental care</p>
           <h1 className="max-w-5xl text-4xl font-black uppercase leading-[0.94] tracking-tight sm:text-6xl lg:text-8xl">
             A brighter smile.
             <br />
@@ -282,13 +282,13 @@ export default function Home() {
           <h2 className="mt-3 text-3xl font-black uppercase sm:text-5xl">Visit <span className="text-[#58b4a7]">White Dental Clinic.</span></h2>
           <div className="mt-10 grid overflow-hidden rounded-2xl border border-white/10 lg:grid-cols-[0.8fr_1.2fr]">
             <div className="flex flex-col justify-center bg-[#111111] p-6 sm:p-10">
-              <p className="text-[10px] uppercase tracking-widest text-[#58b4a7] sm:text-xs">White Dental Clinic · Dallas</p>
+              <p className="text-[10px] uppercase tracking-widest text-[#58b4a7] sm:text-xs">White Dental Clinic · Calgary</p>
               <h3 className="mt-4 text-2xl font-bold">We’re here for your smile.</h3>
-              <address className="mt-4 text-sm leading-7 text-gray-400 not-italic sm:text-base">2717 Main Street<br />Dallas, TX 75226<br />United States</address>
-              <a href="https://www.google.com/maps/search/?api=1&query=2717+Main+Street%2C+Dallas%2C+TX+75226" target="_blank" rel="noreferrer" className="mt-7 inline-flex w-fit rounded-full bg-[#58b4a7] px-6 py-3 text-sm font-bold text-black transition hover:bg-white">Get directions ↗</a>
+              <address className="mt-4 text-sm leading-7 text-gray-400 not-italic sm:text-base">3840 104 Avenue NE<br />Calgary, Alberta<br />Canada</address>
+              <a href="https://www.google.com/maps/search/?api=1&query=3840+104+Avenue+NE%2C+Calgary%2C+Alberta%2C+Canada" target="_blank" rel="noreferrer" className="mt-7 inline-flex w-fit rounded-full bg-[#58b4a7] px-6 py-3 text-sm font-bold text-black transition hover:bg-white">Get directions ↗</a>
               <p className="mt-4 text-xs leading-5 text-gray-500">Please contact us to confirm clinic hours and appointment availability.</p>
             </div>
-            <iframe title="Map to White Dental Clinic in Dallas, Texas" src="https://maps.google.com/maps?q=2717%20Main%20Street%2C%20Dallas%2C%20TX%2075226&t=&z=15&ie=UTF8&iwloc=&output=embed" className="h-[290px] w-full border-0 sm:h-[430px]" loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
+            <iframe title="Map to White Dental Clinic in Calgary, Alberta" src="https://maps.google.com/maps?q=3840%20104%20Avenue%20NE%2C%20Calgary%2C%20Alberta%2C%20Canada&t=&z=15&ie=UTF8&iwloc=&output=embed" className="h-[290px] w-full border-0 sm:h-[430px]" loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
           </div>
         </div>
       </section>
@@ -338,12 +338,12 @@ export default function Home() {
             {socialLinks.length > 0 && <nav aria-label="Social media" className="mt-5 flex flex-wrap gap-2">{socialLinks.map(({ platform, url }) => <a key={platform} href={url} target="_blank" rel="noopener noreferrer" aria-label={`White Dental Clinic on ${platform}`} title={platform} className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-gray-300 transition hover:border-[#58b4a7] hover:text-[#58b4a7] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#58b4a7]"><SocialIcon platform={platform} /></a>)}</nav>}
           </div>
           <div><h3 className="font-bold">Explore</h3><div className="mt-4 flex flex-col gap-3 text-sm text-gray-400"><a href="#treatments" className="hover:text-[#58b4a7]">Dental treatments</a><a href="#practice" className="hover:text-[#58b4a7]">Our practice</a><a href="/book" className="hover:text-[#58b4a7]">Request a visit</a><a href="#faq" className="hover:text-[#58b4a7]">FAQs</a></div></div>
-          <div><h3 className="font-bold">Visit us</h3><address className="mt-4 text-sm leading-6 text-gray-400 not-italic">2717 Main Street<br />Dallas, TX 75226<br />United States</address><a href="https://www.google.com/maps/search/?api=1&query=2717+Main+Street%2C+Dallas%2C+TX+75226" target="_blank" rel="noreferrer" className="mt-3 inline-block text-sm text-[#58b4a7]">Get directions ↗</a></div>
+          <div><h3 className="font-bold">Visit us</h3><address className="mt-4 text-sm leading-6 text-gray-400 not-italic">3840 104 Avenue NE<br />Calgary, Alberta<br />Canada</address><a href="https://www.google.com/maps/search/?api=1&query=3840+104+Avenue+NE%2C+Calgary%2C+Alberta%2C+Canada" target="_blank" rel="noreferrer" className="mt-3 inline-block text-sm text-[#58b4a7]">Get directions ↗</a></div>
           <div><h3 className="font-bold">Patient information</h3><div className="mt-4 flex flex-col gap-3 text-sm text-gray-400"><a href="#location" className="hover:text-[#58b4a7]">Location & map</a><a href="#faq" className="hover:text-[#58b4a7]">First-visit FAQs</a><a href="#contact" className="hover:text-[#58b4a7]">Contact the clinic</a></div></div>
         </div>
         <div className="mx-auto mt-10 flex max-w-7xl flex-col gap-3 border-t border-white/10 pt-6 text-[11px] text-gray-500 sm:flex-row sm:items-center sm:justify-between sm:text-xs">
           <p>White Dental Clinic. All rights reserved.</p>
-          <p>Dallas, Texas · Care that starts with you.</p>
+          <p>Calgary, Alberta · Care that starts with you.</p>
         </div>
       </footer>
     </main>

@@ -95,7 +95,7 @@ function bookingEmailLayout(
 <body style="margin:0;padding:28px;background:#f3f5f7;color:#17202b;font:16px/1.6 Arial,sans-serif">
 <div style="max-width:640px;margin:auto;background:white;border:1px solid #e2e7ed;border-radius:18px;overflow:hidden">
 <div style="padding:22px;text-align:center;background:#102c35;color:white;font-weight:bold;letter-spacing:.12em">WHITE DENTAL CLINIC</div>
-<div style="padding:30px"><p style="margin-top:0;color:#126d69;font-size:12px;font-weight:bold;letter-spacing:.14em;text-transform:uppercase">Dallas · Thoughtful dental care</p>
+<div style="padding:30px"><p style="margin-top:0;color:#126d69;font-size:12px;font-weight:bold;letter-spacing:.14em;text-transform:uppercase">Calgary · Thoughtful dental care</p>
 <h1 style="color:#102c35">${escapeHtml(title)}</h1><p>Hello ${escapeHtml(name)},</p><p>${message}</p>
 <p><strong>Booking code: ${escapeHtml(ticketNumber)}</strong></p>
 <p><a href="${escapeHtml(primaryLink)}" style="display:inline-block;padding:13px 20px;border-radius:999px;background:#126d69;color:white;text-decoration:none;font-weight:bold">${escapeHtml(primaryLabel)}</a></p>

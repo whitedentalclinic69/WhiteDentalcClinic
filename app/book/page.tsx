@@ -171,7 +171,7 @@ function BookingForm() {
             </form>
           )}
         </section>
-        <p className="mt-6 text-center text-xs text-slate-500">White Dental Clinic · 2717 Main Street, Dallas, TX 75226</p>
+        <p className="mt-6 text-center text-xs text-slate-500">White Dental Clinic · 3840 104 Avenue NE, Calgary, Alberta, Canada</p>
       </div>
     </main>
   );

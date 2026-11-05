@@ -14,19 +14,19 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   ...(process.env.APP_URL ? { metadataBase: new URL(process.env.APP_URL) } : {}),
-  title: "White Dental Clinic | Thoughtful Dental Care in Dallas, TX",
+  title: "White Dental Clinic | Thoughtful Dental Care in Calgary, Alberta",
   description:
-    "Discover thoughtful dental care, explore treatment options, and book a visit with White Dental Clinic in Dallas, Texas.",
+    "Discover thoughtful dental care, explore treatment options, and book a visit with White Dental Clinic in Calgary, Alberta.",
   openGraph: {
     type: "website",
     siteName: "White Dental Clinic",
-    title: "White Dental Clinic | Thoughtful Dental Care in Dallas, TX",
-    description: "Thoughtful dental care, clear answers, and a more comfortable visit at White Dental Clinic in Dallas, Texas.",
+    title: "White Dental Clinic | Thoughtful Dental Care in Calgary, Alberta",
+    description: "Thoughtful dental care, clear answers, and a more comfortable visit at White Dental Clinic in Calgary, Alberta.",
   },
   twitter: {
     card: "summary",
-    title: "White Dental Clinic | Thoughtful Dental Care in Dallas, TX",
-    description: "Thoughtful dental care, clear answers, and a more comfortable visit at White Dental Clinic in Dallas, Texas.",
+    title: "White Dental Clinic | Thoughtful Dental Care in Calgary, Alberta",
+    description: "Thoughtful dental care, clear answers, and a more comfortable visit at White Dental Clinic in Calgary, Alberta.",
   },
 };
 
@@ -52,18 +52,17 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               name: "White Dental Clinic",
               url: process.env.APP_URL,
               description:
-                "Thoughtful dental care and appointment bookings in Dallas, Texas.",
+                "Thoughtful dental care and appointment bookings in Calgary, Alberta.",
               address: {
                 "@type": "PostalAddress",
-                streetAddress: "2717 Main Street",
-                addressLocality: "Dallas",
-                addressRegion: "TX",
-                postalCode: "75226",
-                addressCountry: "US",
+                streetAddress: "3840 104 Avenue NE",
+                addressLocality: "Calgary",
+                addressRegion: "Alberta",
+                addressCountry: "CA",
               },
               areaServed: {
                 "@type": "City",
-                name: "Dallas",
+                name: "Calgary",
               },
             }).replace(/</g, "\\u003c"),
           }}

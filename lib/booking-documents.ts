@@ -68,7 +68,7 @@ footer{padding:18px 38px;background:#f4fbfa;color:#526872;font-size:13px}.print{
 <body>
 <button class="print" onclick="window.print()">Print or save as PDF</button>
 <article class="ticket">
-<header><p>White Dental Clinic · Dallas</p><h1>${heading}</h1><span class="badge">${paymentStatus === "Paid" ? "Appointment confirmed" : "Payment pending"}</span></header>
+<header><p>White Dental Clinic · Calgary</p><h1>${heading}</h1><span class="badge">${paymentStatus === "Paid" ? "Appointment confirmed" : "Payment pending"}</span></header>
 <main><p class="description">${escapeHtml(booking.description)}</p><table><tbody>${rows}</tbody></table></main>
 <footer>Thank you for choosing White Dental Clinic. Your booking fee reserves your appointment time and helps our team prepare for your visit. It is credited toward your service total; the remaining balance is payable at your visit.</footer>
 </article>
