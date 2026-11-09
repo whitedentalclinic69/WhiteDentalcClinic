@@ -1,75 +1,129 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# WHITE DENTAL CLINIC
 
-## Getting Started
+The official website and digital platform for WHITE DENTAL CLINIC. The site presents clinic services and supports appointment requests, booking management, customer questions, and online deposits.
 
-First, run the development server:
+## Features
+
+- Clinic homepage with services, gallery media, FAQs, and social links.
+- Appointment booking with service and appointment details.
+- Booking status lookup and customer booking tickets/receipts.
+- PayPal deposit checkout with server-side payment verification.
+- Admin sign-in and dashboard for bookings, services, media, visitor questions, and social links.
+- Email confirmations, payment receipts, and admin replies.
+- Supabase database and storage integration for online deployments.
+
+## Technology
+
+- Next.js 16 App Router
+- React 19 and TypeScript
+- Tailwind CSS 4
+- Supabase JavaScript client
+- PayPal checkout integration
+- Nodemailer for SMTP email
+- ESLint 9
+
+Third-party packages and services remain the property of their respective authors and are subject to their own terms and licences. Their inclusion does not imply ownership by WHITE DENTAL CLINIC.
+
+## Requirements
+
+- Node.js compatible with the installed Next.js version
+- npm
+- Supabase project for online booking, questions, and gallery storage
+- PayPal account for online deposits
+- SMTP account for email delivery
+
+## Installation and development
+
+1. Clone the repository and enter its directory:
+
+   ```bash
+   git clone https://github.com/whitedentalclinic69/WhiteDentalcClinic.git
+   cd WhiteDentalcClinic
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+3. Create a local environment file from the template:
+
+   ```bash
+   cp .env.example .env.local
+   ```
+
+   On Windows PowerShell, use `Copy-Item .env.example .env.local`.
+
+4. Set the required values described in [Environment variables](#environment-variables). Never commit `.env.local` or put server secrets in a `NEXT_PUBLIC_` variable.
+
+5. Start the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+   Visit [http://localhost:3000](http://localhost:3000).
+
+## Environment variables
+
+Use `.env.example` as the variable-name template. Replace its placeholders with credentials from your own services; do not commit real credentials.
+
+| Variable | Purpose |
+| --- | --- |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL. `SUPABASE_URL` is also accepted by server-side code. |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Supabase publishable key used by the browser-facing gallery integration. |
+| `SUPABASE_SERVICE_ROLE_KEY` | Server-only Supabase key for protected database and storage operations. `SUPABASE_SECRET_KEY` is also accepted. |
+| `SUPABASE_STORAGE_BUCKET` | Optional storage bucket override; defaults to `gallery-media`. |
+| `NEXT_PUBLIC_PAYPAL_CLIENT_ID` | PayPal client ID used by the browser checkout. |
+| `PAYPAL_CLIENT_ID` | PayPal client ID for server-side API calls; the public client ID is a fallback. |
+| `PAYPAL_CLIENT_SECRET` | Server-only PayPal secret. |
+| `PAYPAL_BASE_URL` | PayPal API URL. Defaults to the sandbox endpoint; use `https://api-m.paypal.com` for live payments. `PAYPAL_API_BASE` is also accepted. |
+| `SMTP_HOST`, `SMTP_PORT` | SMTP server and port for outgoing email. The port defaults to `587`. |
+| `SMTP_USER`, `SMTP_PASS` | SMTP account credentials. |
+| `EMAIL_FROM` | Optional sender identity; defaults to `SMTP_USER`. |
+| `APP_URL` | Optional public base URL used in email links. Configure it for the production domain. |
+| `ADMIN_ACCESS_KEY` | Required high-entropy secret protecting the admin dashboard and APIs. |
+
+Keep Supabase service/secret keys, PayPal secrets, SMTP credentials, and the admin access key on the server only. Add production values in your hosting provider's environment-variable settings rather than in source control.
+
+## Supabase setup
+
+Apply the SQL files in `supabase/migrations/` in timestamp order to your Supabase project. The migrations create and secure the booking, visitor-question, social-link, and gallery storage resources. Configure the Supabase variables above before using online booking or admin features.
+
+## Checks and production build
+
+Run linting and create a production build:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run lint
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Run the production server locally after a successful build:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-## Email configuration for automatic sending
-
-This app is already wired to send customer emails with Nodemailer. To enable it:
-
-1. In your Gmail account, create an App Password.
-2. Put the real Gmail address and app password in the environment variables in `.env.local` or in Vercel's project settings.
-3. Set `APP_URL` to the public HTTPS domain for White Dental Clinic. Vercel deployments can fall back to the production project URL automatically. Email links never use localhost; configure `APP_URL` for local email testing too.
-4. Use the same Gmail account in `SMTP_USER` and `EMAIL_FROM` unless you have a verified custom domain.
-
-Example:
-
-```env
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=your-gmail-address@gmail.com
-SMTP_PASS=your-16-character-app-password
-EMAIL_FROM="White Dental Clinic <your-gmail-address@gmail.com>"
-APP_URL=https://your-production-domain.example
+```bash
+npm run start
 ```
 
-Add the same values in your Vercel project under Settings → Environment Variables so the live site can send booking confirmations, payment receipts, and admin replies automatically. The booking email is sent when a request is saved; the payment receipt is sent after PayPal confirms the booking fee. Appointment reminder emails are not currently scheduled.
+## Deployment
 
-Set a unique, high-entropy `ADMIN_ACCESS_KEY` in your local environment and Vercel project settings. The admin dashboard and its APIs reject access when this key is not configured; do not use a public/default key.
+The project can be deployed to a Next.js-compatible host such as Vercel:
 
-Visitor questions are saved in Supabase and can only be read or managed through the authenticated admin APIs. Apply the migrations in `supabase/migrations/` in timestamp order, including the question-reply/social-link migration and the public-access restriction migration. The admin can edit or clear supported social URLs; saved links appear as clickable icons in the homepage footer. Replies require `SMTP_HOST`, `SMTP_USER`, and `SMTP_PASS` in Vercel. A reply is marked answered only after the email is accepted by the SMTP server and the database update succeeds.
+1. Import the GitHub repository into the hosting provider.
+2. Configure all required production environment variables in the provider's project settings.
+3. Apply the Supabase migrations and configure PayPal for the desired sandbox or live environment.
+4. Build with `npm run build` and serve with `npm run start` (Vercel detects the Next.js app automatically).
+5. Set `APP_URL` to the public HTTPS site URL so customer email links use the production domain.
 
-All server-side database access requires `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` (or `SUPABASE_SECRET_KEY`) in Vercel. The server client does not fall back to a public/publishable key, since direct public access to visitor questions is revoked.
+Gallery uploads on hosted deployments use Supabase Storage. Local files and local JSON-backed data should not be treated as persistent production storage.
 
-New bookings receive a 10-character alphanumeric booking code. After a booking is saved, the booking form opens `/pay` with the selected service and appointment summary so the customer can immediately pay the 30% deposit with PayPal or eligible cards. Email buttons open `/booking-options`, where customers can choose to pay their deposit or check their booking status. Status lookup requires both the booking code and the email address used when booking. Payment is verified with PayPal before the appointment is confirmed, and a colorful booking ticket and payment receipt are emailed to the customer.
+## Repository
 
-For online bookings, configure `NEXT_PUBLIC_SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` (or `SUPABASE_SECRET_KEY`) and apply all Supabase migrations. Add at least one service with an image or video in the admin dashboard before customers can book. To enable checkout, also configure `NEXT_PUBLIC_PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_ID`, and `PAYPAL_CLIENT_SECRET`; set `PAYPAL_BASE_URL=https://api-m.paypal.com` for live payments, since the default is PayPal sandbox. The client ID must be available to the browser, but the PayPal secret must remain server-only.
+[https://github.com/whitedentalclinic69/WhiteDentalcClinic](https://github.com/whitedentalclinic69/WhiteDentalcClinic)
 
-An admin can edit booking contact and appointment details, change a service only before checkout begins, edit or delete client questions, edit/delete services and media, reply to unanswered questions by email, and save or remove social links. Deleting bookings is restricted to unpaid bookings with no PayPal checkout in progress. Paid bookings remain in history and can be marked attended to archive them. Updating a saved question reply or booking does not send a new email; replies to unanswered questions are emailed when submitted.
+## Copyright and licence
 
-## Gallery uploads on Vercel
+Copyright (c) 2026 WHITE DENTAL CLINIC.
 
-Gallery images and videos are uploaded directly to Supabase Storage, and their public URLs are saved in the `gallery_items` table. The migrations in `supabase/migrations/` create the `bookings`, `visitor_questions`, and `gallery_items` tables, track admin replies, persist social links, and create the public `gallery-media` bucket. Apply every migration in timestamp order with the Supabase CLI, or run each migration in that order in the Supabase SQL Editor. Configure `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, and the server-side `SUPABASE_SERVICE_ROLE_KEY` in Vercel. The admin upload API also creates or configures the bucket on first use; set `SUPABASE_STORAGE_BUCKET` only if you want a different bucket name. The server-side key is required for bucket setup and database writes; never expose it as a `NEXT_PUBLIC_` variable.
-
-Existing gallery entries stored only in the repository's local JSON file cannot be edited or deleted on Vercel; add them again through the admin dashboard so they are saved in the database.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is distributed under the MIT License. See [LICENSE](./LICENSE) for the full licence text. The MIT licence for this project does not replace or alter the licences of third-party dependencies.
